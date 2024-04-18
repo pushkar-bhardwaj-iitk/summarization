@@ -43,7 +43,7 @@ def main():
   train_df, val_df, word2idx, idx2word = preprocess_data('./data/text.pkl', './data/summary.pkl')
   print('Preparing embedding matrix ...')
   emb_matrix = get_embedding_matrix(word2idx, idx2word, './data/glove_vectors.txt', 'glove')
-  summarization = Summarization(emb_matrix, emb_dim=300, hidden_dim=128, word2idx=word2idx, idx2word=idx2word)
+  summarization = Summarization(emb_matrix, emb_dim=50, hidden_dim=128, word2idx=word2idx, idx2word=idx2word)
   print('Preparing Input data ...')
   if choice == 'train':
     train_data = prepare_input_data(train_df, word2idx)
