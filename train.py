@@ -39,7 +39,7 @@ class Summarization(object):
     self.optimizer = optim.Adam(self.model.parameters(), lr=0.00002)
     self.optimizer.load_state_dict(checkpoint['optimizer'])
 
-    iteration = int(path.split('_')[-1][:-4])
+    iteration = int(path.split('_')[-1][:-5])
 
     print('Model weights loaded.')
     return iteration
@@ -145,7 +145,7 @@ class Summarization(object):
 
     return avg_loss
 
-  def train(self, data, train_ml=True, train_rl=False, use_prev=None):
+  def train(self, data, train_ml=True, train_rl=True, use_prev=None):
 
     train_dataset = Summarizer(*data)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True,
@@ -223,11 +223,11 @@ class Summarization(object):
         factor += 1
         epoch_rewards += sampled_reward_avg
         epoch_g_rewards += greedy_reward_avg
-        if num_iter % 50 == 0:
+        if num_iter % 100 == 0:
           print('Iteration: %d, ML Loss: %.3f, RL loss: %.3f, Sampled Reward: %.3f, Greedy Reward: %.3f' % (num_iter, epoch_loss/factor, epoch_rl_loss/factor, epoch_rewards/factor, epoch_g_rewards/factor))
 
-        if num_iter % 100 == 0:
-          save_path = "./models/model_%04d.tar"%num_iter
+        if num_iter % 400 == 0:
+          save_path = "./models/model_%05d.tar"%num_iter
           self.save_weights(save_path)
 
       num_batches = train_dataloader.__len__()
