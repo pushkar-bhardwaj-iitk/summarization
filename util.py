@@ -23,7 +23,7 @@ def read_data(text_path, summary_path):
   with open(text_path, 'rb') as f:
     texts = pickle.load(f)
 
-  with open(title_path, 'rb') as f:
+  with open(summary_path, 'rb') as f:
     summaries = pickle.load(f)
 
   df = pd.DataFrame({'text': texts, 'summary': summaries})
@@ -121,14 +121,14 @@ def target2id(target_words, source_oovs, word2idx):
 
 def prepare_input_data(data, word2idx):
   """
-  :param data: dataframe containing abstracts and titles
+  :param data: dataframe containing abstracts and s
   :param word2idx: dict mapping word to int
   :returns: encoder_inps: source words converted to ints
             encoder_ext_vocabs: source words converted to ints and special ints for OOV words (extended vocab)
             decoder_inps: target words converted to ints
             decoder_targets: shifted target words converted to ints and special ints for source OOV words
             source_oovs: list of source OOV words
-            target_sentences: original target titles
+            target_sentences: original target s
   """
   encoder_inps = []
   encoder_ext_vocabs = []
