@@ -231,7 +231,7 @@ def get_embedding_matrix(word2idx, idx2word, glove_path, name, normalization=Fal
   :param normalization: whether to normalize the embeddings to norm of one
   :return: an embedding matrix: a nn.Embeddings
   """
-  embedding_dim = 300
+  embedding_dim = 50
   try:
     with open('./data/embeddings_' + name + '.pkl', 'rb') as f:
       glove_vectors = pickle.load(f)
