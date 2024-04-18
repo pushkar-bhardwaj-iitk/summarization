@@ -14,19 +14,19 @@ def use_cuda(obj):
 
   return obj
 
-def read_data(abstract_path, title_path):
+def read_data(text_path, summary_path):
   """
   :param abstract_path: path to abstract pickle file
   :param title_path: path to title pickle file
   :returns: dataframe containing abstracts in 1st column and titles in 2nd column
   """
-  with open(abstract_path, 'rb') as f:
-    abstracts = pickle.load(f)
+  with open(text_path, 'rb') as f:
+    texts = pickle.load(f)
 
   with open(title_path, 'rb') as f:
-    titles = pickle.load(f)
+    summaries = pickle.load(f)
 
-  df = pd.DataFrame({'abstract': abstracts, 'title': titles})
+  df = pd.DataFrame({'text': texts, 'summary': summaries})
   return df
 
 def split_data(df, split=0.1):
@@ -48,7 +48,7 @@ def get_vocab(train_df, size=50000):
     :return: a list containing upto size number of most frequent words
     """
     vocab = {}
-    data = list(train_df['abstract'].values) + list(train_df['title'].values)
+    data = list(train_df['text'].values) + list(train_df['summary'].values)
     for example in data:
       for word in example.split():
         if word in vocab:
@@ -167,12 +167,12 @@ def prepare_test_data(csv, word2idx):
             target_sentences: original target titles
   """
   df = pd.read_csv(csv)
-  abstracts = df['abstract'].values
+  texts = df['Text'].values
   encoder_inps = []
   encoder_ext_vocabs = []
   decoder_inps = []
   source_oovs = []
-  for row in abstracts:
+  for row in texts:
     ab = row
     abs = str(ab).lower().replace('\n', ' ').split()
     encoder_inp = [word2idx.get(w, 1) for w in abs]
@@ -185,7 +185,7 @@ def prepare_test_data(csv, word2idx):
   # make dummy inputs, targets and target sentences
   decoder_inps = [[0]]*len(df)
   decoder_targets = decoder_inps
-  target_sentences = list(abstracts)
+  target_sentences = list(texts)
 
   return df, (encoder_inps, encoder_ext_vocabs, decoder_inps, decoder_targets, source_oovs, target_sentences)
 
