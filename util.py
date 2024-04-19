@@ -26,7 +26,7 @@ def read_data(text_path, summary_path):
   with open(summary_path, 'rb') as f:
     summaries = pickle.load(f)
 
-  df = pd.DataFrame({'text': texts, 'summary': summaries})
+  df = pd.DataFrame({'Text': texts, 'Summary': summaries})
   return df
 
 def split_data(df, split=0.1):
@@ -48,7 +48,7 @@ def get_vocab(train_df, size=50000):
     :return: a list containing upto size number of most frequent words
     """
     vocab = {}
-    data = list(train_df['text'].values) + list(train_df['summary'].values)
+    data = list(train_df['Text'].values) + list(train_df['Summary'].values)
     for example in data:
       for word in example.split():
         if word in vocab:
