@@ -49,7 +49,7 @@ class Beam(object):
     # will be sorted in descending order of scores                           
     best_scores, best_scores_id = torch.topk(input=scores_t, k=beam_size, dim=0)
     self.scores = best_scores
-    beams_order = best_scores_id.squeeze(1) // n_extended_vocab
+    beams_order = torch.div(best_scores_id.squeeze(1),n_extended_vocab, rounding_mode='floor')
     best_words = best_scores_id % n_extended_vocab
     self.h_t = h_t[beams_order]
     self.c_t = c_t[beams_order]
