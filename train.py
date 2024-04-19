@@ -39,7 +39,7 @@ class Summarization(object):
     self.optimizer = optim.Adam(self.model.parameters(), lr=0.00002)
     self.optimizer.load_state_dict(checkpoint['optimizer'])
 
-    iteration = int(path.split('_')[-1][:-5])
+    iteration = int(path.split('_')[-1][:-4])
 
     print('Model weights loaded.')
     return iteration
@@ -257,10 +257,10 @@ class Summarization(object):
                                  collate_fn=Summarizer.collate_fn)
     rouge  = Rouge()
     decoded_sentences = []
-    eval_titles = []
+    eval_summaries = []
     print('Generating summaries ...')
     pbar = tqdm(total=eval_dataloader.__len__())
-    for enc_inp, dec_inp, enc_ext_vocab, dec_tar, enc_inp_len, dec_inp_len, max_zeros_ext_vocab, enc_padding_mask, oovs, titles in eval_dataloader:
+    for enc_inp, dec_inp, enc_ext_vocab, dec_tar, enc_inp_len, dec_inp_len, max_zeros_ext_vocab, enc_padding_mask, oovs, summaries in eval_dataloader:
 
       enc_inp = self.model.embedding_matrix(enc_inp)
       enc_out, h_n, c_n = self.model.encoder(enc_inp, enc_inp_len)
@@ -280,7 +280,7 @@ class Summarization(object):
         print('Unknown search strategy.')
         return
 
-      eval_titles.extend(titles)
+      eval_summaries.extend(summaries)
       for j in range(len(prediction_ids)):
         decoded_words = ids2target(prediction_ids[j], oovs[j], self.idx2word)
         try:
@@ -298,22 +298,22 @@ class Summarization(object):
       pbar.update(1)
 
     if evaluation == 'val':
-      rouge_scores = rouge.get_scores(decoded_sentences, eval_titles, avg=True)
+      rouge_scores = rouge.get_scores(decoded_sentences, eval_summaries, avg=True)
       print('Rouge score on eval set: ')
       print('Rouge-1 F1: ', rouge_scores['rouge-1']['f'])
       print('Rouge-2 F1: ', rouge_scores['rouge-2']['f'])
       print('Rouge-L F1: ', rouge_scores['rouge-l']['f'])
 
     if print_samples:
-      eval_abstracts = [' '.join(ab.replace('\n',' ').split()) for ab in eval_df['abstract'].values]
+      eval_texts = [' '.join(ab.replace('\n',' ').split()) for ab in eval_df['Text'].values]
       i = 0
-      for ab, t, pred_t in zip(eval_abstracts, eval_titles, decoded_sentences):
-        print('Abstract: ')
+      for ab, t, pred_t in zip(eval_texts, eval_summaries, decoded_sentences):
+        print('Text: ')
         pprint(ab)
         if evaluation == 'val':
-          print('Gold Title: ')
+          print('Gold Summary: ')
           pprint(t)
-        print('Generated title: ')
+        print('Generated Summary: ')
         pprint(pred_t)
         print("************************************************")
         i += 1
