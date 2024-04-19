@@ -50,7 +50,7 @@ def main():
     summarization.train(train_data, use_prev=load_path)
   elif choice == 'val':
     eval_data = prepare_input_data(val_df, word2idx)
-    summarization.eval(eval_data, val_df, load_path=load_path, evaluation='val', print_samples=True)
+    summarization.eval(eval_data, val_df, load_path=load_path, evaluation='val', print_samples=False)
   elif choice == 'test':
     test_df, eval_data = prepare_test_data(test_file, word2idx)
     summarization.eval(eval_data, test_df, load_path=load_path, evaluation='test', print_samples=True)
