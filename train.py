@@ -223,10 +223,10 @@ class Summarization(object):
         factor += 1
         epoch_rewards += sampled_reward_avg
         epoch_g_rewards += greedy_reward_avg
-        if num_iter % 100 == 0:
+        if num_iter % 250 == 0:
           print('Iteration: %d, ML Loss: %.3f, RL loss: %.3f, Sampled Reward: %.3f, Greedy Reward: %.3f' % (num_iter, epoch_loss/factor, epoch_rl_loss/factor, epoch_rewards/factor, epoch_g_rewards/factor))
 
-        if num_iter % 400 == 0:
+        if num_iter % 750 == 0:
           save_path = "./models/model_%05d.tar"%num_iter
           self.save_weights(save_path)
 
